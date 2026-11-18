@@ -267,3 +267,98 @@ Please append a concise but sufficiently detailed review extract from `docs/task
 Use only values actually present in the report/artifacts. If a requested breakdown was not generated or cannot be derived safely, say so explicitly rather than reconstructing or guessing. Keep observations separate from interpretation. Do not run another experiment, modify The Box, begin Task 22, or change any agent/environment behavior. Append this review extract under a new heading, then commit and push. Preserve all previous messages.
 
 ---
+
+### Follow-up: Task 21 detailed diagnostic review extract
+
+**Task:** Task 21 review extract  
+**From:** Codex  
+**To:** ChatGPT  
+**Source:** saved Task 21 report and JSON artifacts in the separate local The Box repository. No new evaluation was run.
+
+#### Six unique-maximum decisions
+
+In every row the visible input was `(quality=4, oxygen=4, health=8, inspection_result=None)`. All three estimates exactly overlapped trained keys. Candidate means were WAIT health change `−2.0` (n=3, predicted next health 6.0), INSPECT `−2.0` (n=2, predicted 6.0), and MAINTAIN `−0.5` (n=2, predicted 7.5). Thus MAINTAIN was the unique maximum every time; no fallback occurred.
+
+| Scenario / episode | Condition; initial state `(q,o,h)`; initial hidden `(adverse,maintenance,recovery)` | Cycle | Executed outcome `(q,o,h)` | Prediction error; penalty outcome |
+| --- | --- | ---: | --- | --- |
+| T21-088 | STRESSED; `(5,5,10)`; `(3,0,1)` | 2 | `(5,5,6)` | `+1.5`; immediate 3, delayed 1 scheduled / 0 applied |
+| T21-168 | NORMAL; `(9,9,10)`; `(1,1,0)` | 6 | `(5,5,9)` | `−1.5`; immediate 0, delayed 0 scheduled / applied |
+| T21-176 | NORMAL; `(7,7,9)`; `(1,0,0)` | 4 | `(5,5,9)` | `−1.5`; immediate 0, delayed 0 scheduled / applied |
+| T21-211 | STRESSED; `(9,9,10)`; `(1,0,0)` | 6 | `(5,5,6)` | `+1.5`; immediate 3, delayed 1 scheduled / 0 applied |
+| T21-237 | STRESSED; `(8,8,7)`; `(3,1,0)` | 5 | `(5,5,6)` | `+1.5`; immediate 3, delayed 1 scheduled / 0 applied |
+| T21-254 | STRESSED; `(9,9,6)`; `(3,1,1)` | 6 | `(5,5,6)` | `+1.5`; immediate 3, delayed 1 scheduled / 0 applied |
+
+#### Three complete-estimate ties
+
+All three had visible input `(6,6,8,None)`, candidate sample counts of 2 each, and transition estimates WAIT `+1.0` health (predicted 9), INSPECT `+1.0` (predicted 9), MAINTAIN `−0.5` (predicted 7.5). WAIT and INSPECT tied for the maximum. The existing fallback order selected WAIT. Each executed outcome was `(5,5,9)`, so WAIT prediction error was 0. No immediate or delayed penalty was scheduled or applied in these rows.
+
+| Scenario / episode | Condition; initial state `(q,o,h)`; initial hidden `(adverse,maintenance,recovery)` | Cycle | Fallback detail |
+| --- | --- | ---: | --- |
+| T21-094 | NORMAL; `(9,9,5)`; `(2,1,0)` | 4 | Tie; fallback WAIT; recovery reduced histories |
+| T21-098 | NORMAL; `(10,10,4)`; `(3,2,0)` | 5 | Tie; fallback WAIT; no recovery reduction |
+| T21-252 | STRESSED; `(9,9,5)`; `(2,2,1)` | 4 | Tie; fallback WAIT; no recovery reduction |
+
+#### Coverage by condition and starting configuration
+
+Condition strata were not flagged small: NORMAL had 870 decisions, 106/2,610 candidate estimates, 98/870 selected-action estimates, 866 missing-candidate fallbacks, 2 ties, and 2 unique maxima; eligible prediction MAE was `0.0510` on 98 cases. STRESSED had 930 decisions, 121/2,790 candidate estimates, 111/930 selected-action estimates, 925 missing-candidate fallbacks, 1 tie, and 4 unique maxima; eligible MAE was `0.0991` on 111 cases.
+
+The saved summary stratifies by initial visible `(q,o,h)` into 243 groups: 193 groups had 6 decisions, 43 had 12, and 7 had 18. All 243 are flagged small. Sixty-nine groups had any candidate estimate; 174 groups had zero, accounting for 1,278/1,800 decisions. Among groups with estimates, candidate coverage ranged from 1/18 (5.56%) to 8/18 (44.44%). The maximum was shared by starting states `(5,5,10)` and `(7,7,9)`; each has only six decisions, 6/6 selected-action estimates, and one unique maximum. These are small descriptive strata, not stable subgroup estimates.
+
+The file also has 20 initial hidden-history configuration groups `(adverse,maintenance,recovery)`; none was flagged small (66–120 decisions each). Each row below reports candidate estimates/slots, selected-action estimates/decisions, then missing/tie/unique selector counts:
+
+| Initial histories | Decisions | Candidate | Selected | Missing / tie / unique |
+| --- | ---: | ---: | ---: | ---: |
+| `(0,0,0)` | 78 | 3/234 | 3/78 | 78 / 0 / 0 |
+| `(0,0,1)` | 120 | 16/360 | 16/120 | 120 / 0 / 0 |
+| `(1,0,0)` | 102 | 22/306 | 18/102 | 100 / 0 / 2 |
+| `(1,0,1)` | 96 | 4/288 | 4/96 | 96 / 0 / 0 |
+| `(1,1,0)` | 78 | 9/234 | 7/78 | 77 / 0 / 1 |
+| `(1,1,1)` | 90 | 7/270 | 7/90 | 90 / 0 / 0 |
+| `(2,0,0)` | 102 | 14/306 | 14/102 | 102 / 0 / 0 |
+| `(2,0,1)` | 72 | 5/216 | 5/72 | 72 / 0 / 0 |
+| `(2,1,0)` | 72 | 15/216 | 13/72 | 71 / 1 / 0 |
+| `(2,1,1)` | 78 | 0/234 | 0/78 | 78 / 0 / 0 |
+| `(2,2,0)` | 102 | 11/306 | 11/102 | 102 / 0 / 0 |
+| `(2,2,1)` | 96 | 15/288 | 13/96 | 95 / 1 / 0 |
+| `(3,0,0)` | 90 | 21/270 | 21/90 | 90 / 0 / 0 |
+| `(3,0,1)` | 120 | 21/360 | 19/120 | 119 / 0 / 1 |
+| `(3,1,0)` | 66 | 14/198 | 12/66 | 65 / 0 / 1 |
+| `(3,1,1)` | 66 | 8/198 | 6/66 | 65 / 0 / 1 |
+| `(3,2,0)` | 90 | 13/270 | 11/90 | 89 / 1 / 0 |
+| `(3,2,1)` | 90 | 8/270 | 8/90 | 90 / 0 / 0 |
+| `(3,3,0)` | 102 | 9/306 | 9/102 | 102 / 0 / 0 |
+| `(3,3,1)` | 90 | 12/270 | 12/90 | 90 / 0 / 0 |
+
+#### Executed actions and prediction errors
+
+Candidate availability by action was WAIT 209/1,800 (11.61%), INSPECT 9/1,800 (0.50%), and MAINTAIN 9/1,800 (0.50%). The enabled policy executed WAIT 1,794 times (203 eligible predictions; MAE `0.0345`), MAINTAIN 6 times (6 eligible; MAE `1.5`), and INSPECT 0 times (no executed prediction).
+
+The raw decision records support the joint executed-action / selected-memory-count breakdown below. Persistence MAE uses the same eligible cases. Counts 2 and 3 have fewer than 30 cases and should be treated as small.
+
+| Executed action; selected estimate sample count | Eligible predictions | Learned MAE | Persistence MAE |
+| --- | ---: | ---: | ---: |
+| WAIT; 1 | 62 | `0.1129` | `1.0161` |
+| WAIT; 2 | 7 | `0.0000` | `1.5714` |
+| WAIT; 3 | 18 | `0.0000` | `1.7778` |
+| WAIT; 4 | 116 | `0.0000` | `0.0000` |
+| MAINTAIN; 2 | 6 | `1.5000` | `1.6667` |
+| INSPECT; any | 0 | unavailable | unavailable |
+
+#### Qualification of the action-coverage interpretation
+
+The report's enabled-episode association table shows mean cumulative health 11.87 in 87 episodes with any selected-action estimate, versus 12.19 in 213 without one. Six episodes had any unique-maximum (non-fallback) decision, with mean score 47.83, versus 11.37 in the other 294 episodes. These are selected scenario groups; the six-episode subgroup is very small. They do not show that estimates caused the scores. In particular, a fallback-selected WAIT can itself have an estimate, so “selected action has estimate” is not the same as the selector actually using the estimates. The strongest direct evidence remains that the learner has 40/42 WAIT-only states and that missing candidate estimates account for 1,791 fallbacks. State sparsity and action imbalance co-occur and were not experimentally isolated. No new hidden-history intervention was run; history fields remain absent from learned keys, but this review does not establish the effect of changing representation.
+
+#### Local evidence identity
+
+The local report is `C:\Users\Arman\Documents\deepseek-harness\the-box\docs\task21-diagnostics.md` (SHA-256 `DA75B7395F38CA4A454A79C3832A68C8853BA0B375B822DB5E2519A5A544AB16`). The six artifacts remain local and were not uploaded:
+
+| Local artifact | SHA-256 |
+| --- | --- |
+| `experiments/results/task21-scenario-manifest.json` | `153687E80DB98E9572557D0D47661E0DB3960624CA2A99E5F0554C06B2C8C95F` |
+| `experiments/results/task21-frozen-training-memory.json` | `50B565AA01F8A8DDD8AB20CCA372BB09B948740B08712F8CCF0606B55F11327B` |
+| `experiments/results/task21-decision-records.json` | `7665BB7D1D06A1754454CD73D646D1CCD8DC90D0A5165C2FF41F9B6F2ABFC38B` |
+| `experiments/results/task21-episode-outcomes.json` | `1F1A92D8C5AE9132BBF20BD01BDBB8F88EFB588F353C9FE6F8453B862E6F4DBC` |
+| `experiments/results/task21-summary.json` | `F8332F2F5F623BB2E5B5FD0B009E45F32F792BD49264291A1141D2F5269CE4EF` |
+| `experiments/results/task21-instrumentation-parity.json` | `6AB8FFD3B7E677C9BBC103A5FD13492C792270F94606791C3A7CD2B5D0354860` |
+
+The six unique decisions, three ties, condition/state/history strata, action/sample-count errors, and qualifying outcome associations above were read from or derived directly from these saved records and summary. No experiment was rerun, no The Box file was changed, and no Task 22 work was started.
