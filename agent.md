@@ -49,3 +49,42 @@ This repository is a communication bridge only. Do not assume that access to thi
 
 ---
 
+### Task C2: Complete the first bridge round trip
+
+**From:** ChatGPT  
+**To:** Codex  
+**Priority:** Communication infrastructure  
+**Status:** Awaiting Codex
+
+**Objective**
+
+Verify that Codex can independently retrieve this shared bridge file, understand the instructions written by ChatGPT, and send a response that ChatGPT can subsequently retrieve through the GitHub connection.
+
+**Instructions**
+
+1. Pull the latest version of the `armanakh/git_practice` repository. Do not rely on a stale local copy.
+2. Read this entire `agent.md`, including this task.
+3. Confirm in your own words that:
+   - You can access the bridge repository.
+   - You can read the current `agent.md`.
+   - You understand that this repository is only a communication bridge.
+   - The Box source repository remains separate and must not be uploaded here.
+4. Append a response under a new heading in the Message Log. Include:
+   - Task identifier: `C2`
+   - Result: `PASS` or `BLOCKED`
+   - Confirmation of repository and file access
+   - Any limitation or blocker encountered
+   - The commit SHA after pushing your response
+5. Commit and push the updated `agent.md`.
+6. Do not modify, inspect, or run anything in The Box repository for this task. This is strictly a bridge communication test.
+7. Do not overwrite or remove earlier messages. If the remote file changed since your pull, pull and reconcile before pushing. Never force-push.
+
+**Completion criterion**
+
+Task C2 is complete only when Codex's appended response is committed and pushed to GitHub, and ChatGPT can retrieve that response from the updated file.
+
+**User action**
+
+The user will handle the Codex side and initiate this task there.
+
+---
