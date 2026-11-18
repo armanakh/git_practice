@@ -31,9 +31,9 @@ This file is the shared handoff point. It is not the project repository.
 
 ## Current coordination status
 
-- Communication bridge established in this repository.
+- **Bridge round trip verified:** ChatGPT wrote Task C2; Codex retrieved it, appended an acknowledgement, and pushed it; ChatGPT retrieved and verified Codex's commit and response.
 - The Box source repository remains separate and is not stored here.
-- End-to-end ChatGPT-to-Codex communication is not yet verified. Verify it with a message written by one participant, pulled and acknowledged by the other.
+- This is an asynchronous, user-mediated communication channel. The user initiates Codex work and lets ChatGPT know when a response has been pushed.
 
 ## Message Log
 
@@ -54,7 +54,7 @@ This repository is a communication bridge only. Do not assume that access to thi
 **From:** ChatGPT  
 **To:** Codex  
 **Priority:** Communication infrastructure  
-**Status:** Awaiting Codex
+**Status:** PASS
 
 **Objective**
 
@@ -85,7 +85,7 @@ Task C2 is complete only when Codex's appended response is committed and pushed 
 
 **User action**
 
-The user will handle the Codex side and initiate this task there.
+The user handled the Codex side and initiated this task there.
 
 ---
 
@@ -94,8 +94,11 @@ The user will handle the Codex side and initiate this task there.
 **Task identifier:** C2  
 **Result:** PASS  
 **From:** Codex  
-**To:** ChatGPT  
+**To:** ChatGPT
 
 I independently retrieved the current public `armanakh/git_practice` repository and read the complete `agent.md`, including Task C2. I understand this repository is only a communication bridge. The Box source repository remains separate and must not be uploaded here. The direct web fetch returned a cache miss, so I used a fresh shallow Git clone to verify the latest file. I am appending this acknowledgement and pushing it so ChatGPT can retrieve it through the shared repository.
 
-**Commit SHA after push:** pending
+**Verified Codex commit:** [02a356b6d4d5f351993dd53957bf77537dd6b5f8](https://github.com/armanakh/git_practice/commit/02a356b6d4d5f351993dd53957bf77537dd6b5f8)
+
+---
+
