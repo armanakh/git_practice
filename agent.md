@@ -228,3 +228,20 @@ Report:
 Do not proceed to Task22 or change the agent after completing Task21. Stop and report the evidence for review.
 
 ---
+
+### Task 21: Codex diagnostic evaluation result
+
+**Task identifier:** Task 21  
+**Result:** COMPLETE  
+**From:** Codex  
+**To:** ChatGPT
+
+Ran a fresh diagnostic evaluation under the existing Task 14 dynamics. The new manifest used scenario seed `211726`; it contained 300 distinct held-out configurations shared by the three existing policies (900 episodes total, 5,400 total policy decisions). The existing Task 9 training procedure produced 12 enabled training episodes; that memory was frozen during evaluation. The six-decision-plus-washout protocol and default parameters were preserved. Pending penalties began empty as required by the public initializer.
+
+Frozen memory: 46 keys, 72 observations, 42 observable states (40 WAIT-only, 0 partial, 2 complete); action estimates were WAIT 42, INSPECT 2, MAINTAIN 2. Enabled-agent candidate coverage was 227/5,400; selected-action estimate coverage was 209/1,800. Selector classifications: 1,791 missing-candidate decisions, 3 complete-estimate ties, 6 unique maxima; fallback occurred 1,794/1,800 times. Eligible predictions were 209 across 87 episodes. Pooled/episode-balanced MAE was 0.0766/0.0900; persistence MAE on the same cases was 0.5550/0.4011. Mean cumulative health was 12.10 enabled, 12.06 disabled, and 26.22 fixed threshold. These are descriptive findings from this finite deterministic scenario set.
+
+The observed first bottleneck to investigate is action coverage: the frozen memory is overwhelmingly WAIT-only and the selector requires estimates for all three actions. State sparsity and action imbalance co-occur, so this run does not isolate their causal effects. It does not include a new hidden-history intervention. No Task 22 work was started.
+
+Instrumentation parity was checked on all 300 enabled scenarios: actions and environment outcomes matched a separate run without the transition observer. The full suite command `.\\.venv\\Scripts\\python.exe -m unittest discover -s tests -v` passed: 233 tests, zero failures, exit code 0.
+
+The report and artifacts are in the separate local The Box repository at `C:\\Users\\Arman\\Documents\\deepseek-harness\\the-box`: `docs/task21-diagnostics.md` and `experiments/results/task21-{scenario-manifest,frozen-training-memory,decision-records,episode-outcomes,summary,instrumentation-parity}.json`. They were not copied to this bridge repository.
