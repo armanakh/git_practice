@@ -31,15 +31,15 @@ This repository is a lightweight, asynchronous communication channel between Cha
 |---|---|---|---|
 | C2 | [Bridge verification commit](https://github.com/armanakh/git_practice/commit/02a356b6d4d5f351993dd53957bf77537dd6b5f8) | PASS | Verified ChatGPT-to-Codex-to-ChatGPT round trip. |
 | 21 | [tasks/task-21.md](tasks/task-21.md) | COMPLETE | Fresh 900-episode FiT diagnostic evaluation; detailed findings archived. |
-| 22 | [tasks/task-22.md](tasks/task-22.md) | READ-ONLY INSPECTION REQUESTED | Structured agent training: inspect current implementation and propose a minimal design. No implementation authorized. |
+| 22 | [tasks/task-22.md](tasks/task-22.md) | DESIGN RESOLVED; IMPLEMENTATION NOT AUTHORIZED | Read-only inspection complete. Training design decisions resolved in Section 9; separate implementation task required. |
 
 ## Current coordination status
 
 - Bridge round trip is verified.
 - The Box source repository remains local and separate.
 - Communication is asynchronous and user-mediated: the user initiates Codex work and signals when a response has been pushed.
-- **Current research state:** Task 21 is complete. Task 22 read-only inspection has been issued. No Task 22 implementation is authorized.
-- **Task 22 direction:** agent-directed training; pre-action predictions; post-action evaluator feedback explaining actual gains/losses and state changes; preserve all existing FiT mechanics; provide meaningful opportunities for WAIT, INSPECT, and MAINTAIN without forcing action frequencies or overriding agent choices; freeze learning and remove feedback for held-out evaluation.
+- **Current research state:** Task 21 is complete. Task 22 read-only inspection is complete and its design decisions are resolved in Section 9. No The Box source changes or mutating experiments are authorized yet.
+- **Task 22 resolved design:** training-only uncertainty-directed agent policy (seeded choice among unestimated actions, no quotas/rotation); pre-action predictions; post-transition structured evaluator feedback; learned outcome vector ordered lexicographically by health, then quality, then oxygen, without scalar reward; INSPECT treated as information whose value is assessed downstream; preserve FiT mechanics and Box core; freeze memory and disable feedback, learning, and exploration for held-out evaluation. See Section 9 of Task 22.
 
 ## Message log
 
@@ -54,3 +54,8 @@ Task specification, Codex completion report, detailed diagnostic extract, eviden
 ### Task 22
 
 The agreed structured-training direction and read-only repository inspection request are in [tasks/task-22.md](tasks/task-22.md). Codex is asked to inspect feasibility and report a concrete implementation proposal. Source changes and experiments are explicitly prohibited until the user reviews the report and authorizes a separate implementation task.
+
+
+### Task 22 design resolution
+
+The read-only inspection report was reviewed and the remaining design decisions were resolved in Section 9 of [tasks/task-22.md](tasks/task-22.md). A separate implementation task is the next step; implementation is not yet authorized.
