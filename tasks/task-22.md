@@ -182,3 +182,125 @@ Return:
 8. Confirmation that no files, tests, configurations, or experiment artifacts were changed.
 
 **Do not implement. Wait for user approval after delivering the inspection report.**
+
+
+---
+
+## 9. Design resolution after read-only inspection
+
+**Status:** Design decisions resolved. The inspection findings are accepted as the implementation basis. No local The Box source changes are authorized by this addendum. A separate implementation task must be issued before Codex changes source or runs mutating experiments.
+
+The following decisions close the unresolved design questions.
+
+### 9.1 Separate genuine choice from cold-start fallback
+
+The existing WAIT fallback is not evidence that the agent prefers WAIT. When candidate estimates are missing, the selector cannot compare the actions and mechanically returns WAIT. We must not report this as a learned decision.
+
+During training, use an explicit **uncertainty-directed, agent-owned action policy**:
+
+- If one or more available actions have no usable estimate for the current observable state, select one of those unestimated actions using a seeded pseudorandom choice.
+- Do not impose quotas, rotations, target frequencies, or experimenter-selected actions.
+- Once all available actions have usable estimates, select according to the learned outcome model described below.
+- If estimated outcomes are tied, use a seeded random tie-break rather than silently preferring WAIT.
+- Record whether each action resulted from uncertainty-directed selection, model-based selection, or tie-breaking.
+
+This is a policy of the agent, not an experimenter intervention. It makes uncertainty actionable without guaranteeing equal counts. The agent may still repeatedly choose the same action by chance. That remains measurable. The seed makes runs reproducible.
+
+This training policy is distinct from the fixed-threshold baseline. It must not be described as evidence of learned preference when it is acting under uncertainty.
+
+### 9.2 Learn and compare a transparent outcome vector, not a scalar reward
+
+For each observable-state/action pair, retain estimates of the actual transition components already supported by the FiT learner:
+
+- expected fish-health change,
+- expected tank-quality change,
+- expected oxygen change.
+
+The evaluator produces a structured assessment derived from those actual changes:
+- health: gain, no change, or loss;
+- quality: improved, unchanged, or degraded;
+- oxygen: improved, unchanged, or degraded;
+- overall description: health-positive, health-negative, or mixed, with the supporting environmental changes stated explicitly.
+
+No weighted sum, invented reward, or hidden score is introduced.
+
+For model-based action comparison, use a **lexicographic ordering** consistent with the agreed hierarchy: compare predicted health change first; only when health predictions tie, compare quality; only when those tie, compare oxygen. This makes the priority explicit and avoids arbitrary exchange rates between unlike quantities. Keep the component predictions visible in records.
+
+The implementation must verify that this is compatible with existing estimate semantics and bounded/clipped transitions. If the current estimates cannot support this comparison without ambiguity, stop and report the exact blocker rather than quietly changing the objective.
+
+### 9.3 Feedback is both explanation and structured learning evidence
+
+Feedback must not be a decorative text annotation. After receiving it, the agent updates its transition experience from the executed action and actual pre/post observations, using the structured outcome components above.
+
+The evaluator's categorical descriptions are derived labels for those observed components, not independent reward values. Store the assessment alongside the transition record so that the agent's learning can be audited. The numerical outcome estimates remain grounded in observed transitions.
+
+The strict order is:
+1. capture permitted pre-action observation;
+2. choose action;
+3. record prediction;
+4. execute action;
+5. read committed transition;
+6. generate evaluator assessment;
+7. update experience.
+
+No evaluator output may enter the prediction made earlier in that same decision.
+
+### 9.4 INSPECT is an information action
+
+Do not classify INSPECT as harmful merely because it has no immediate physical benefit. Its feedback must separate:
+- immediate physical effects, if any;
+- information revealed and when that information becomes available;
+- the fact that future decisions can condition on the revealed result.
+
+Do not assign an arbitrary immediate information reward. Its value is assessed through subsequent decisions and episode-level outcomes. The evaluator must not reveal hidden information before INSPECT has legitimately exposed it to the agent. Experimenter-side records may retain hidden ground truth separately for analysis.
+
+### 9.5 Delayed effects and causal attribution
+
+Feedback describes the committed transition and any delayed consequence that actually materialized in that transition. It must distinguish direct action effects from ordinary environmental dynamics and history-dependent penalties wherever the existing records support that distinction.
+
+Do not charge a later penalty to an earlier action as though it occurred immediately. Do not claim that an action caused a downstream outcome unless the recorded mechanics support that attribution. No counterfactual action outcome may be fabricated.
+
+### 9.6 Training and evaluation policy
+
+Training uses uncertainty-directed selection while the model lacks action estimates. The policy then uses the learned outcome vector as estimates become available.
+
+Before held-out evaluation:
+- freeze all learned estimates;
+- disable evaluator feedback and all learning updates;
+- disable uncertainty-directed exploration;
+- use the frozen model-based selector only;
+- retain the existing experience-disabled and fixed-threshold baselines unchanged.
+
+If the frozen model lacks estimates for a state/action comparison at evaluation time, record the missing coverage and use a clearly identified deterministic fallback. Do not disguise fallback decisions as model-based choices.
+
+Use the same held-out scenario manifest for all policies. Report training action-selection modes separately from evaluation action-selection modes.
+
+### 9.7 INSPECT value and evaluation
+
+Report INSPECT at two levels:
+- immediate transition: physical changes and information revealed;
+- episode level: subsequent actions and cumulative fish health, alongside the other environmental measures.
+
+Do not infer that INSPECT was beneficial solely because information was revealed, nor that it was harmful because it lacked immediate physical benefit. Its decision value must be demonstrated by later behaviour and outcomes, compared against the unchanged baselines on matched scenarios.
+
+### 9.8 Implementation boundary and required tests
+
+The implementation belongs in the FiT experiment/agent layer. Do not alter Box core or FiT world dynamics.
+
+A separate implementation task must include tests proving:
+- pre-action predictions are captured before execution and cannot see evaluator output;
+- evaluator reads committed transitions and cannot mutate authoritative state;
+- agent-facing feedback contains no unrevealed hidden condition/history/penalty data;
+- actual executed transitions alone update experience;
+- the outcome vector and lexicographic comparison follow the stated hierarchy without scalarization;
+- uncertainty-directed selection only acts when estimates are insufficient, uses a reproducible seed, and imposes no quotas or action-frequency targets;
+- tie-breaking is reproducible;
+- INSPECT feedback separates physical and informational effects;
+- delayed consequences are described at the cycle in which they materialize;
+- evaluation has frozen memory, no feedback, no learning, and no exploration;
+- missing evaluation coverage is explicitly recorded;
+- existing baselines and FiT mechanics remain unchanged.
+
+First implement and test the training/evaluator mechanics. Then run a training validation to inspect whether the scenario manifest genuinely presents useful opportunities. Only after that should a separate evaluation run be authorized. Preserve all raw artifacts and report prediction accuracy, evaluator assessments, action distribution, memory coverage, and task outcomes as separate dimensions.
+
+**These decisions resolve the design questions identified in the Task 22 inspection report. They do not authorize implementation.** The next step is to issue a separate implementation task for explicit approval.
