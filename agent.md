@@ -34,14 +34,14 @@ This repository is a lightweight, asynchronous communication channel between Cha
 | 22 | [tasks/task-22.md](tasks/task-22.md) | DESIGN RESOLVED; IMPLEMENTATION NOT AUTHORIZED | Read-only inspection complete. Training design decisions resolved in Section 9; separate implementation task required. |
 | 23 | [tasks/task-23.md](tasks/task-23.md) | COMPLETE; COVERAGE LIMITATION IDENTIFIED | Implementation and bounded validation complete: 247 tests passed. Model-based selection occurred in only 3/96 decisions; full three-action coverage in 4/75 states. Reviewed; no held-out evaluation yet. |
 | 24 | [tasks/task-24.md](tasks/task-24.md) | COMPLETE; RECOMMENDATION C | Read-only analysis confirms sparse exact-key coverage and some within-key outcome variation. More evidence is needed before representation changes or held-out evaluation. |
-| 25 | [tasks/task-25.md](tasks/task-25.md) | TRAINING-ONLY DIAGNOSTIC AUTHORIZED; SCALE INCREASED | Run 16/64/256 repetitions across three seeds: 8,064 episodes and 48,384 decisions total, using the unchanged Task 23 runner and exact key. No source changes or held-out evaluation. |
+| 25 | [tasks/task-25.md](tasks/task-25.md) | COMPLETE; C DOMINANT, B SECONDARY | All 9 runs completed: 8,064 episodes and 48,384 decisions. Coverage largely plateaued by 64–128 repetitions; within-key health outcome variation persists. No held-out evaluation. |\n| 26 | [tasks/task-26.md](tasks/task-26.md) | READ-ONLY DESIGN STUDY AUTHORIZED | Diagnose agent-visible history, partial observability, state aliasing, and uncertainty-aware alternatives using Task 25 traces. No implementation or new experiments. |
 
 ## Current coordination status
 
 - Bridge round trip is verified.
 - The Box source repository remains local and separate.
 - Communication is asynchronous and user-mediated: the user initiates Codex work and signals when a response has been pushed.
-- **Current research state:** Task 21 is complete. Task 22 design is resolved. Task 23 implementation and bounded validation are complete (247 tests passed). Task 24 read-only diagnostic verified sparse exact-key coverage and identified repeated-key outcome variation; recommendation C. Task 25 now authorizes nine larger training-only recurrence runs (16/64/256 repetitions × 3 seeds): 8,064 episodes and 48,384 decisions total, using the unchanged implementation. No held-out policy comparison is authorized.
+- **Current research state:** Task 21 is complete. Task 22 design is resolved. Task 23 implementation and bounded validation are complete (247 tests passed). Task 24 read-only diagnostic verified sparse exact-key coverage and identified repeated-key outcome variation; recommendation C. Task 25 is complete: all nine larger training-only runs finished (8,064 episodes, 48,384 decisions). Coverage largely plateaued after 64–128 repetitions and variable Fish-health outcomes persist within identical agent-visible keys; interpretation C dominant, B secondary. No held-out evaluation. Task 26 authorizes a read-only design study of agent-legal history, partial observability, and uncertainty-aware models.
 - **Task 22 resolved design / Task 23 implementation:** seeded agent-owned selection among unestimated actions (no quotas/rotation); pre-action predictions; post-transition structured evaluator feedback; learned outcome vector ordered lexicographically by health, then quality, then oxygen, without scalar reward; INSPECT treated as information whose value is assessed downstream; preserve FiT mechanics and Box core; freeze memory and disable feedback, learning, and exploration for held-out evaluation. Task 23 authorizes implementation and bounded training validation only. See Section 9 of Task 22.
 
 ## Message log
@@ -79,3 +79,7 @@ Task 24's diagnostic is accepted. The exact-key representation will be retained 
 ### Task 25 scale increase
 
 At the user's direction, Task 25's original 2/8/16 repetition matrix was superseded before execution by 16/64/256 repetitions across the same three seeds. The revised total is 8,064 episodes and 48,384 decisions. The agent, learner, state/action key, observation boundary, scenario manifest, and FiT dynamics remain unchanged. See Section 9 of [tasks/task-25.md](tasks/task-25.md).
+
+### Task 25 review and Task 26
+
+Task 25 completed all nine runs at 16/64/256 repetitions across three seeds (8,064 episodes; 48,384 decisions). Coverage improved from 16 to 64 repetitions, then largely plateaued. Repeated identical agent-visible state/action keys continued to show Fish-health outcome variation. Interpretation C is dominant, B secondary. No held-out evaluation was run. [Task 26](tasks/task-26.md) requests a read-only design study to distinguish history-resolvable aliasing from partial observability and evaluate the smallest defensible next learning-design step. No implementation or new experiments are authorized.
