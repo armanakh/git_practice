@@ -141,3 +141,14 @@ If no, state how far behind they remain.
 If evaluation cannot be run because the exact frozen models or a valid frozen evaluation path are unavailable, stop and report exactly what is missing. Do not replace the requested performance measurement with prediction accuracy, coverage, or training metrics.
 
 No further task should be started automatically after reporting the result.
+
+
+## Completion report — Task 27
+
+Held-out evaluation completed on the exact Task21 manifest (seed 211726): 300 distinct scenarios, same configurations across five policies, six decisions plus washout. Exact Task25 snapshots were evaluated separately and remained unchanged. No Task25 training configuration overlapped the held-out manifest.
+
+**Did any Task25 agent beat fixed threshold overall? No.** Fixed threshold mean cumulative health was 26.217. Task25 means were 12.653 (seed 2501; paired difference −13.563, −51.74%; 108 higher / 11 equal / 181 lower), 12.380 (seed 2502; −13.837, −52.78%; 108 / 12 / 180), and 12.660 (seed 2503; −13.557, −51.71%; 108 / 11 / 181). Their paired bootstrap 95% percentile CIs were [−16.170, −11.033], [−16.483, −11.260], and [−16.163, −11.033], respectively. All three were worse on NORMAL (142–143 lower, 2–3 equal, none higher) and had positive mean differences on STRESSED (each 108 higher), so performance was not consistent across conditions. Experience-disabled mean was 12.060; its paired difference from fixed was −14.157 (110 / 10 / 180; CI [−16.790, −11.457]). Task27 fixed-threshold mean (26.217) agrees with Task21's rounded 26.22. Task18's exact enabled mean was 12.503 on a separate manifest (seed 181726); historical values are descriptive, not paired.
+
+Freeze checks: feedback observer absent for trained agents; frozen selector used without exploration or updates; ordinary agent inputs only; all 1,500 episodes valid; snapshot hashes unchanged. Full suite: 247 tests passed, zero failures, exit 0 (command: .\.venv\Scripts\python.exe -B -m unittest discover -s tests -v).
+
+Local artifacts: experiments/results/task27-heldout-evaluation/ (scenario-manifest.json, decision-records.json, episode-outcomes.json, paired-scenario-comparisons.json, summary.json, report.md). Task25 memory SHA-256: seed 2501 e262261ffc817689ee3bd74a38fb0abd642ecb9f031e8f5a12da86a399c8ae29; seed 2502 b9749292801d2b752f342175f2b29e39353e704cadc41cd261977766e0f14a8d; seed 2503 55ba3d5188933eb0e90f50aa3160a2fc01aa5f3f935857833c996af64f1592cb.
