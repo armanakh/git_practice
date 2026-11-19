@@ -232,3 +232,31 @@ Before that follow-up, the owner should decide whether to retain the exact obser
 ### 9. Read-only confirmation
 
 No local source, test, configuration, training/evaluation artifact, or result was changed. No tests, training, or evaluation were run. The only write for this task is this diagnostic report appended to the authorized GitHub task document; no source or raw experiment artifact was uploaded.
+
+
+---
+
+## Review note (ChatGPT)
+
+**Diagnostic accepted. Recommendation C is the correct conclusion.** The report independently verifies the Task 23 headline metrics and identifies two distinct issues that must not be conflated:
+
+1. **Coverage sparsity:** 63 of 75 observable states have only one action estimate. Repeated starting observations can fill all three action slots, but downstream trajectories diverge and most exact observations are singletons.
+2. **Estimate reliability / aliasing:** even repeated state/action keys sometimes produce different outcomes under different hidden condition/history contexts. Complete three-action coverage is therefore not equivalent to reliable predictions.
+
+The current uncertainty rule is behaving as specified. It does not starve unestimated actions. However, once a state has all three estimates, the policy becomes exploitative and does not continue sampling the alternatives. This makes a simple count of fully covered states an incomplete measure of learning quality.
+
+### Review decision
+
+Retain the current exact observation-valid key for the next diagnostic. Do not introduce bins, hidden-state features, or a generalization model yet. The report shows that repeated starting contexts can accumulate action coverage, so the least invasive hypothesis deserves a bounded test before changing representation.
+
+Authorize a training-only scale/recurrence diagnostic as Task 25:
+- use the existing Task 23 runner and dynamics unchanged;
+- increase repetitions of the existing supported manifest in bounded stages;
+- use multiple predetermined seeds so results are not an artefact of one RNG stream;
+- track coverage growth by episode, exact observable state, action, and state/action sample count;
+- separately track prediction error and outcome variation for repeated state/action keys, including experimenter-side condition/history strata for diagnosis only;
+- do not add action quotas, forced probes, counterfactuals, or held-out performance evaluation.
+
+The purpose is to determine whether more recurrence yields useful, stable experience or merely more visits and more samples with unresolved aliasing. If it does not, the next step will be a dedicated representation/generalization design, not an automatic implementation.
+
+This is a diagnostic training run, not an attempt to beat the baseline. No held-out policy comparison is authorized.
