@@ -161,3 +161,48 @@ Append a report to this task document and push it to the bridge. Include:
 Codex is authorized to run the nine bounded Task 25 training-only runs using the existing Task 23 implementation, write outputs only to the nine new non-existing directories specified above, and perform read-only analysis of those new outputs.
 
 **No source changes, test changes, training-policy changes, representation changes, baseline changes, historical artifact writes, or held-out evaluation are authorized.**
+
+
+## 9. Scale amendment: substantially increased training volume
+
+**This section supersedes Section 3's original repetition matrix and the corresponding run-count figures.** All other Task 25 boundaries, runner requirements, analysis requirements, stop conditions, and interpretation rules remain in force.
+
+The user has authorized a substantial increase in training volume before execution.
+
+### Revised run matrix
+
+Use repetition levels **16, 64, and 256**, each across seeds **2501, 2502, and 2503**.
+
+Each repetition means one complete pass through the existing eight-configuration manifest, preserving Task 23's manifest construction and episode ordering. Each run starts with fresh empty memory and its own seeded RNG.
+
+| Repetitions | Episodes per seed | Decisions per seed | Episodes across 3 seeds |
+|---:|---:|---:|---:|
+| 16 | 128 | 768 | 384 |
+| 64 | 512 | 3,072 | 1,536 |
+| 256 | 2,048 | 12,288 | 6,144 |
+| **Total** | **2,688 per seed** | **16,128 per seed** | **8,064** |
+
+**Grand total: 8,064 episodes and 48,384 decisions across nine independent runs.**
+
+Use these unique output directories, verifying each does not exist before starting:
+- `experiments/results/task25-recurrence/r16-seed2501/`
+- `experiments/results/task25-recurrence/r16-seed2502/`
+- `experiments/results/task25-recurrence/r16-seed2503/`
+- `experiments/results/task25-recurrence/r64-seed2501/`
+- `experiments/results/task25-recurrence/r64-seed2502/`
+- `experiments/results/task25-recurrence/r64-seed2503/`
+- `experiments/results/task25-recurrence/r256-seed2501/`
+- `experiments/results/task25-recurrence/r256-seed2502/`
+- `experiments/results/task25-recurrence/r256-seed2503/`
+
+Never overwrite or reuse an existing output path. If any path exists, stop and report rather than deleting, renaming, or reusing it.
+
+### Additional execution safeguards
+
+- Before launching the full matrix, verify the runner's expected episode and decision counts using its existing interface or read-only inspection. Do not modify source to accommodate the larger run.
+- Execute one run at a time and verify its completion and output integrity before proceeding to the next.
+- Preserve partial outputs and stop on unexpected errors or resource problems. Do not silently reduce the requested scale.
+- Keep progress summaries at episode checkpoints so coverage growth and diminishing returns can be assessed across the full run.
+- If runtime or resource limits make the full matrix impractical, stop, report exactly what completed, and request a revised authorization. Do not substitute a smaller experiment without approval.
+
+The larger scale does not authorize any change to the agent's algorithm, state/action key, observation boundary, FiT dynamics, scenario manifest, action-selection policy, or evaluator. It remains a training-only recurrence/volume diagnostic. **Held-out evaluation remains prohibited.**
