@@ -32,14 +32,15 @@ This repository is a lightweight, asynchronous communication channel between Cha
 | C2 | [Bridge verification commit](https://github.com/armanakh/git_practice/commit/02a356b6d4d5f351993dd53957bf77537dd6b5f8) | PASS | Verified ChatGPT-to-Codex-to-ChatGPT round trip. |
 | 21 | [tasks/task-21.md](tasks/task-21.md) | COMPLETE | Fresh 900-episode FiT diagnostic evaluation; detailed findings archived. |
 | 22 | [tasks/task-22.md](tasks/task-22.md) | DESIGN RESOLVED; IMPLEMENTATION NOT AUTHORIZED | Read-only inspection complete. Training design decisions resolved in Section 9; separate implementation task required. |
-| 23 | [tasks/task-23.md](tasks/task-23.md) | IMPLEMENTATION AUTHORIZED | Implement structured agent-directed training, evaluator feedback, outcome-vector learning, tests, and bounded training validation. No held-out evaluation authorized. |
+| 23 | [tasks/task-23.md](tasks/task-23.md) | COMPLETE; COVERAGE LIMITATION IDENTIFIED | Implementation and bounded validation complete: 247 tests passed. Model-based selection occurred in only 3/96 decisions; full three-action coverage in 4/75 states. Reviewed; no held-out evaluation yet. |
+| 24 | [tasks/task-24.md](tasks/task-24.md) | READ-ONLY DIAGNOSTIC AUTHORIZED | Diagnose sparse exact-state/action coverage and determine whether more training or a representation change is needed. No source changes or experiments. |
 
 ## Current coordination status
 
 - Bridge round trip is verified.
 - The Box source repository remains local and separate.
 - Communication is asynchronous and user-mediated: the user initiates Codex work and signals when a response has been pushed.
-- **Current research state:** Task 21 is complete. Task 22 inspection/design is complete. Task 23 implementation is authorized in the local The Box repository, including tests and bounded training-mechanics validation only. No held-out policy comparison is authorized.
+- **Current research state:** Task 21 is complete. Task 22 design is resolved. Task 23 implementation and bounded training validation are complete (247 tests passed). Review found only 3 model-based decisions in 96 training decisions and complete three-action estimates in 4 of 75 observable states. Task 24 read-only diagnostic is now authorized. No held-out policy comparison is authorized.
 - **Task 22 resolved design / Task 23 implementation:** seeded agent-owned selection among unestimated actions (no quotas/rotation); pre-action predictions; post-transition structured evaluator feedback; learned outcome vector ordered lexicographically by health, then quality, then oxygen, without scalar reward; INSPECT treated as information whose value is assessed downstream; preserve FiT mechanics and Box core; freeze memory and disable feedback, learning, and exploration for held-out evaluation. Task 23 authorizes implementation and bounded training validation only. See Section 9 of Task 22.
 
 ## Message log
@@ -64,3 +65,7 @@ The read-only inspection report was reviewed and the remaining design decisions 
 ### Task 23
 
 [Task 23](tasks/task-23.md) authorizes implementation in the local The Box experiment/agent layer, focused tests, full test suite, and a bounded training-mechanics validation in a new output location. It explicitly prohibits held-out policy comparison, baseline changes, Box core/FiT dynamics changes, and uploading source or raw artifacts to this bridge.
+
+### Task 23 review and Task 24
+
+Task 23 implementation is accepted as complete for mechanics, but its small validation did not establish useful model-based coverage. See the review note appended to [tasks/task-23.md](tasks/task-23.md). [Task 24](tasks/task-24.md) asks Codex to diagnose exact-key sparsity and training/generalization options using existing code and artifacts only. No changes or new experiments are authorized.
