@@ -33,14 +33,15 @@ This repository is a lightweight, asynchronous communication channel between Cha
 | 21 | [tasks/task-21.md](tasks/task-21.md) | COMPLETE | Fresh 900-episode FiT diagnostic evaluation; detailed findings archived. |
 | 22 | [tasks/task-22.md](tasks/task-22.md) | DESIGN RESOLVED; IMPLEMENTATION NOT AUTHORIZED | Read-only inspection complete. Training design decisions resolved in Section 9; separate implementation task required. |
 | 23 | [tasks/task-23.md](tasks/task-23.md) | COMPLETE; COVERAGE LIMITATION IDENTIFIED | Implementation and bounded validation complete: 247 tests passed. Model-based selection occurred in only 3/96 decisions; full three-action coverage in 4/75 states. Reviewed; no held-out evaluation yet. |
-| 24 | [tasks/task-24.md](tasks/task-24.md) | READ-ONLY DIAGNOSTIC AUTHORIZED | Diagnose sparse exact-state/action coverage and determine whether more training or a representation change is needed. No source changes or experiments. |
+| 24 | [tasks/task-24.md](tasks/task-24.md) | COMPLETE; RECOMMENDATION C | Read-only analysis confirms sparse exact-key coverage and some within-key outcome variation. More evidence is needed before representation changes or held-out evaluation. |
+| 25 | [tasks/task-25.md](tasks/task-25.md) | TRAINING-ONLY DIAGNOSTIC AUTHORIZED | Run a bounded 3-seed recurrence/volume study using the unchanged Task 23 runner and exact key. No source changes or held-out evaluation. |
 
 ## Current coordination status
 
 - Bridge round trip is verified.
 - The Box source repository remains local and separate.
 - Communication is asynchronous and user-mediated: the user initiates Codex work and signals when a response has been pushed.
-- **Current research state:** Task 21 is complete. Task 22 design is resolved. Task 23 implementation and bounded training validation are complete (247 tests passed). Review found only 3 model-based decisions in 96 training decisions and complete three-action estimates in 4 of 75 observable states. Task 24 read-only diagnostic is now authorized. No held-out policy comparison is authorized.
+- **Current research state:** Task 21 is complete. Task 22 design is resolved. Task 23 implementation and bounded validation are complete (247 tests passed). Task 24 read-only diagnostic verified sparse exact-key coverage and identified repeated-key outcome variation; recommendation C. Task 25 now authorizes nine bounded training-only recurrence runs (3 repetition levels × 3 seeds) using the unchanged implementation. No held-out policy comparison is authorized.
 - **Task 22 resolved design / Task 23 implementation:** seeded agent-owned selection among unestimated actions (no quotas/rotation); pre-action predictions; post-transition structured evaluator feedback; learned outcome vector ordered lexicographically by health, then quality, then oxygen, without scalar reward; INSPECT treated as information whose value is assessed downstream; preserve FiT mechanics and Box core; freeze memory and disable feedback, learning, and exploration for held-out evaluation. Task 23 authorizes implementation and bounded training validation only. See Section 9 of Task 22.
 
 ## Message log
@@ -69,3 +70,7 @@ The read-only inspection report was reviewed and the remaining design decisions 
 ### Task 23 review and Task 24
 
 Task 23 implementation is accepted as complete for mechanics, but its small validation did not establish useful model-based coverage. See the review note appended to [tasks/task-23.md](tasks/task-23.md). [Task 24](tasks/task-24.md) asks Codex to diagnose exact-key sparsity and training/generalization options using existing code and artifacts only. No changes or new experiments are authorized.
+
+### Task 24 review and Task 25
+
+Task 24's diagnostic is accepted. The exact-key representation will be retained for one bounded recurrence/volume study before considering generalization. [Task 25](tasks/task-25.md) authorizes nine training-only runs with fresh memory and distinct seeds, writing only to new output directories. No source changes, representation changes, or held-out evaluation are authorized.
