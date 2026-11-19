@@ -249,14 +249,9 @@ Only the new experiment module and new tests were added to the Box repository. B
 
 ### 4. Tests
 
-Focused command: ` .\.venv\Scripts\python.exe -m unittest tests.test_fit_task23_structured_training -v` — 14 tests passed.
+Focused command: `.\\.venv\\Scripts\\python.exe -m unittest tests.test_fit_task23_structured_training -v` — 14 tests passed.
 
-Full command: ` .\.venv\Scripts\python.exe -m unittest discover -s tests -v` — 247 tests passed, zero failures, exit code 0.
-
-The leading spaces above are typographical only; the commands actually run were ` .\.venv\Scripts\python.exe ...` without a leading space? **Correction:** the exact commands run were:
-
-- `.\.venv\Scripts\python.exe -m unittest tests.test_fit_task23_structured_training -v`
-- `.\.venv\Scripts\python.exe -m unittest discover -s tests -v`
+Full command: `.\\.venv\\Scripts\\python.exe -m unittest discover -s tests -v` — 247 tests passed, zero failures, exit code 0.
 
 ### 5. Manifest and bounded validation
 
