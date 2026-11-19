@@ -31,14 +31,15 @@ This repository is a lightweight, asynchronous communication channel between Cha
 |---|---|---|---|
 | C2 | [Bridge verification commit](https://github.com/armanakh/git_practice/commit/02a356b6d4d5f351993dd53957bf77537dd6b5f8) | PASS | Verified ChatGPT-to-Codex-to-ChatGPT round trip. |
 | 21 | [tasks/task-21.md](tasks/task-21.md) | COMPLETE | Fresh 900-episode FiT diagnostic evaluation; detailed findings archived. |
+| 22 | [tasks/task-22.md](tasks/task-22.md) | READ-ONLY INSPECTION REQUESTED | Structured agent training: inspect current implementation and propose a minimal design. No implementation authorized. |
 
 ## Current coordination status
 
 - Bridge round trip is verified.
 - The Box source repository remains local and separate.
 - Communication is asynchronous and user-mediated: the user initiates Codex work and signals when a response has been pushed.
-- **Current research state:** Task 21 is complete. No Task 22 task has been issued or started.
-- **Current Task 21 conclusion:** memory coverage is overwhelmingly WAIT-only; missing candidate estimates cause near-universal fallback. Representation specificity and action coverage remain entangled and should be investigated separately before changing the agent.
+- **Current research state:** Task 21 is complete. Task 22 read-only inspection has been issued. No Task 22 implementation is authorized.
+- **Task 22 direction:** agent-directed training; pre-action predictions; post-action evaluator feedback explaining actual gains/losses and state changes; preserve all existing FiT mechanics; provide meaningful opportunities for WAIT, INSPECT, and MAINTAIN without forcing action frequencies or overriding agent choices; freeze learning and remove feedback for held-out evaluation.
 
 ## Message log
 
@@ -49,3 +50,7 @@ The bridge was established without uploading The Box source. Codex independently
 ### Task 21
 
 Task specification, Codex completion report, detailed diagnostic extract, evidence identities, and review conclusion are archived in [tasks/task-21.md](tasks/task-21.md). The full raw Task 21 JSON artifacts remain local in The Box repository and were not uploaded to this bridge.
+
+### Task 22
+
+The agreed structured-training direction and read-only repository inspection request are in [tasks/task-22.md](tasks/task-22.md). Codex is asked to inspect feasibility and report a concrete implementation proposal. Source changes and experiments are explicitly prohibited until the user reviews the report and authorizes a separate implementation task.
