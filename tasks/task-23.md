@@ -223,3 +223,53 @@ This authorization does **not** include:
 - uploading The Box source or raw experiment artifacts to this GitHub bridge.
 
 If any of these boundaries must be crossed to complete the work, stop and request a separate decision.
+
+
+---
+
+## Completion report (Codex)
+
+**Status:** Task 23 implementation and bounded training-mechanics validation completed. No held-out comparison was run.
+
+### 1. Files added
+
+- `experiments/fit_task23_structured_training.py`: isolated Task 23 training runner, component evaluator records, frozen selector helpers, manifest, and JSON artifact writer.
+- `tests/test_fit_task23_structured_training.py`: 14 focused tests for ordering, committed transitions, non-mutation, observable-only feedback, vector selection, exploration/tie reproducibility, INSPECT timing, delayed-effect timing, frozen fallback coverage, boundaries, and reproducibility.
+- Bounded validation artifacts were written locally under `experiments/results/task23-training-validation-complete2/` (manifest, traces, memory, and summary). Earlier non-overwriting Task 23 validation outputs were retained locally under `task23-training-validation/`, `task23-training-validation-reporting/`, and `task23-training-validation-complete/`. No Box source or raw artifact was uploaded to this bridge.
+
+### 2. Architecture and policy
+
+The new path uses the existing `FitTask6Agent`, `FitTask6Environment`, observable `state_action_key`, and `update_transition_estimate` mechanisms. `_training_policy` chooses seeded pseudorandomly among only currently unestimated actions; once all three exact state/action estimates exist, it compares the vector lexicographically by health, quality, then oxygen. Ties use the seeded RNG. Each decision records its candidate component estimates, chosen action, and selection mode before execution.
+
+The observer reads the immutable committed `CycleRecord`, derives numerical updates from the actual permitted pre/post observations, and stores explanatory component labels separately from experimenter-only penalty/history diagnostics. Agent feedback contains observed component deltas and INSPECT information only after its normal reveal point. `freeze_estimates` and `select_frozen_evaluation_action` provide an immutable snapshot and explicit missing-action/fallback record for a later evaluation harness; no evaluation harness or held-out run was added here.
+
+### 3. Preserved boundaries
+
+Only the new experiment module and new tests were added to the Box repository. Box core, FiT environment and calculation rules, agent interface implementation, existing Task 9/10/18/21 runners, fixed-threshold baseline, experience-disabled baseline, and historical artifacts were not modified. The agent receives no hidden condition/history or pending-penalty fields. No scalar reward, action quota, forced probe, or counterfactual was added.
+
+### 4. Tests
+
+Focused command: ` .\.venv\Scripts\python.exe -m unittest tests.test_fit_task23_structured_training -v` — 14 tests passed.
+
+Full command: ` .\.venv\Scripts\python.exe -m unittest discover -s tests -v` — 247 tests passed, zero failures, exit code 0.
+
+The leading spaces above are typographical only; the commands actually run were ` .\.venv\Scripts\python.exe ...` without a leading space? **Correction:** the exact commands run were:
+
+- `.\.venv\Scripts\python.exe -m unittest tests.test_fit_task23_structured_training -v`
+- `.\.venv\Scripts\python.exe -m unittest discover -s tests -v`
+
+### 5. Manifest and bounded validation
+
+The manifest has eight configurations: both NORMAL and STRESSED conditions crossed with four Tank/Fish states spanning below, near, and above the health-relevant Tank threshold, varied Fish health, and valid initial adverse, maintenance-adverse, and recovery histories. Each configuration was repeated twice. There were 288 configured action opportunities (16 episodes × 6 decisions × 3 available actions); these are scenario opportunities, not action targets.
+
+Successful command: `.\.venv\Scripts\python.exe -m experiments.fit_task23_structured_training --seed 2301 --repetitions 2 --output-dir experiments/results/task23-training-validation-complete2`. It completed with seed 2301, 16 episodes, 96 decisions, and 96 evaluator/update records. The output path was confirmed absent before execution. An earlier attempt using the default output path stopped with `FileExistsError` because the initial validation directory already existed; it did not overwrite that directory. The run was then executed successfully in the fresh named output path above.
+
+### 6. Validation diagnostics
+
+Observed action counts/proportions: WAIT 34 (35.42%), INSPECT 29 (30.21%), MAINTAIN 33 (34.38%). Selection modes: uncertainty-directed 91, model-based 3, tie-break 2. These are observed outcomes, not targets.
+
+The run recorded 12 health-positive, 21 health-negative, 62 mixed, and 1 no-physical-change assessment. INSPECT was selected 29 times and each reveal became available to the next decision. Thirteen committed cycles recorded a materialized delayed effect. The model stored 91 state/action keys over 75 observable states: 4 states had all three action estimates and 71 had partial action coverage. Five selected predictions were eligible for descriptive component MAE (health 1.6, quality 0.0, oxygen 0.0); this tiny in-training diagnostic is not predictive-validity or performance evidence. Episode cumulative health is separately preserved in local traces and is not interpreted as a baseline comparison.
+
+### 7. Limitations and authorization boundary
+
+The exact observable-state table remains sparse; hidden escalation history is not represented in its keys. The bounded run establishes completion, feedback/update production, and seeded reproducibility only. It does not establish improved decision quality, generalization, or baseline performance. No held-out performance comparison was run. A separate owner decision is still needed before any held-out evaluation is authorized.
