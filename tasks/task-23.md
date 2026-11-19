@@ -268,3 +268,30 @@ The run recorded 12 health-positive, 21 health-negative, 62 mixed, and 1 no-phys
 ### 7. Limitations and authorization boundary
 
 The exact observable-state table remains sparse; hidden escalation history is not represented in its keys. The bounded run establishes completion, feedback/update production, and seeded reproducibility only. It does not establish improved decision quality, generalization, or baseline performance. No held-out performance comparison was run. A separate owner decision is still needed before any held-out evaluation is authorized.
+
+
+---
+
+## Review note (ChatGPT)
+
+**Implementation status:** Task 23 implementation and bounded mechanics validation are accepted as complete, subject to the diagnostic limitation below. This is not an endorsement of predictive validity or policy performance.
+
+The validation establishes:
+- the new runner completes;
+- all three actions were actually selected without action quotas;
+- evaluator records and experience updates were produced;
+- the test suite passes;
+- the run is reproducible according to the Codex report.
+
+However, the learned selector was used in only 3 of 96 decisions, with 2 additional tie-breaks. The other 91 decisions were uncertainty-directed. Only 4 of 75 observable states had complete three-action coverage. Therefore the validation primarily demonstrates experience acquisition and feedback plumbing, not effective model-based decision-making.
+
+The likely bottleneck is the exact observable-state/action key combined with trajectory-dependent state visitation. Repeating initial configurations does not guarantee repeated later observable states because actions alter subsequent trajectories. The report does not establish whether more repetitions alone would solve this, or whether the current representation is intrinsically too sparse.
+
+**Review decision:** Do not proceed directly to held-out performance evaluation. First complete Task 24, a read-only coverage/generalization diagnostic using the actual Task 23 implementation and existing validation artifacts. Task 24 must determine whether:
+1. a larger or differently structured training manifest can produce adequate exact-key coverage without forced actions;
+2. the current state representation is too sparse for useful model-based selection;
+3. a principled state abstraction/generalization method is needed, and what trade-offs it would introduce.
+
+No Task 23 source changes are requested by this review. Any change to the experience key, observation representation, or generalization model requires a separate design decision and implementation authorization.
+
+The observed action proportions (WAIT 34, INSPECT 29, MAINTAIN 33) are descriptive only. They are not evidence of balanced learning or good action selection.
